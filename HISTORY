@@ -1,0 +1,11 @@
+VDR Plugin 'ciplus' Revision History
+------------------------------------
+
+2017-05-28: Version 1.0.1
+
+- Private library was not closed properly.
+- Some small improvements
+
+2017-04-01: Version 1.0.0
+
+- Initial revision.

@@ -1,0 +1,7 @@
+*.o
+*.so
+*.a
+*.mo
+*.pot
+.dependencies
+nbproject/*

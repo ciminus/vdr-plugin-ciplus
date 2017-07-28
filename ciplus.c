@@ -20,7 +20,7 @@
 
 #define LIBCIPLUSPRIVATE PLUGINDIR "/libciplusprivate.so"
 
-static const char *VERSION        = "1.0.1";
+static const char *VERSION        = "1.0.2";
 static const char *DESCRIPTION    = "Use CI+ Modules with VDR";
 
 const char *confDir = NULL;

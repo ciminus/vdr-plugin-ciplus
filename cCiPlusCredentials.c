@@ -234,7 +234,7 @@ bool cCiPlusCredentials::validateCertificate(X509* cert) {
     X509_STORE_CTX_set_flags(store_ctx, X509_V_FLAG_IGNORE_CRITICAL);
     int ret = X509_verify_cert(store_ctx);
     if (ret != 1)
-        dbgprotocol("cCiPlusCredentials::validateCertificate() => %s\n", X509_verify_cert_error_string(store_ctx->error));
+        dbgprotocol("cCiPlusCredentials::validateCertificate() => %s\n", X509_verify_cert_error_string(X509_STORE_CTX_get_error(store_ctx)));
     X509_STORE_CTX_free(store_ctx);
     return ret == 1;
 }

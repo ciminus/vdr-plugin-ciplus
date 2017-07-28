@@ -2,6 +2,50 @@
 #include "ciplustools.h"
 #include <string.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+int DH_set0_pqg(DH *dh, BIGNUM *p, BIGNUM *q, BIGNUM *g)
+{
+    /* If the fields p and g in d are NULL, the corresponding input
+     * parameters MUST be non-NULL.  q may remain NULL.
+     */
+    if ((dh->p == NULL && p == NULL)
+        || (dh->g == NULL && g == NULL))
+        return 0;
+
+    if (p != NULL) {
+        BN_free(dh->p);
+        dh->p = p;
+    }
+    if (q != NULL) {
+        BN_free(dh->q);
+        dh->q = q;
+    }
+    if (g != NULL) {
+        BN_free(dh->g);
+        dh->g = g;
+    }
+
+    if (q != NULL) {
+        dh->length = BN_num_bits(q);
+    }
+
+    return 1;
+}
+
+void DH_get0_key(const DH *dh, const BIGNUM **pub_key, const BIGNUM **priv_key)
+{
+    if (pub_key != NULL)
+        *pub_key = dh->pub_key;
+    if (priv_key != NULL)
+        *priv_key = dh->priv_key;
+}
+
+void DH_set_flags(DH *dh, int flags)
+{
+    dh->flags |= flags;
+}
+#endif
+
 int verify_cb(int ok, X509_STORE_CTX *ctx)
 {
     if (X509_STORE_CTX_get_error(ctx) == X509_V_ERR_CERT_NOT_YET_VALID) {
@@ -145,25 +189,29 @@ LBL_ERR:
 int dh_gen_exp(uint8_t *dest, int dest_len, uint8_t *dh_g, int dh_g_len, uint8_t *dh_p, int dh_p_len)
 {
 	DH *dh;
+        BIGNUM *p, *g;
+        const BIGNUM *priv_key;
 	int len;
 	unsigned int gap;
 
 	dh = DH_new();
 
-	dh->p = BN_bin2bn(dh_p, dh_p_len, 0);
-	dh->g = BN_bin2bn(dh_g, dh_g_len, 0);
-	dh->flags |= DH_FLAG_NO_EXP_CONSTTIME;
+	p = BN_bin2bn(dh_p, dh_p_len, 0);
+	g = BN_bin2bn(dh_g, dh_g_len, 0);
+        DH_set0_pqg(dh, p, NULL, g);
+        DH_set_flags(dh, DH_FLAG_NO_EXP_CONSTTIME);
 
 	DH_generate_key(dh);
-
-	len = BN_num_bytes(dh->priv_key);
+        
+        DH_get0_key(dh, NULL, &priv_key);
+	len = BN_num_bytes(priv_key);
 	if (len > dest_len) {
 		return -1;
 	}
 
 	gap = dest_len - len;
 	memset(dest, 0, gap);
-	BN_bn2bin(dh->priv_key, &dest[gap]);
+	BN_bn2bin(priv_key, &dest[gap]);
 
 	DH_free(dh);
 

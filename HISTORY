@@ -1,5 +1,8 @@
 VDR Plugin 'ciplus' Revision History
 ------------------------------------
+2017-07-28: Version 1.0.2
+
+- OpenSSL 1.1.0 Support
 
 2017-05-28: Version 1.0.1
 

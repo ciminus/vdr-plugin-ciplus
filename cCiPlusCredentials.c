@@ -466,9 +466,6 @@ void cCiPlusCredentials::checkNewKey() {
 int cCiPlusCredentials::handleGetData(unsigned int datatype_id) {
     switch (datatype_id) {
 	case DT_CICAM_BRANDCERT:
-	case DT_DHPM:
-	case DT_CICAM_DEVCERT:
-	case DT_SIGNATURE_B:
             /* this results in CICAM_ID when cert-chain is verified and ok */
             if(!checkCiCertificates())
                 break;
@@ -485,19 +482,25 @@ int cCiPlusCredentials::handleGetData(unsigned int datatype_id) {
             generate_SAK_SEK();
             break;
 
-	/* SAC data messages */
-        //case DT_CICAM_ID:
+	/* SAC data messages */        
 	case DT_KEY_REGISTER:
-        case DT_KP:
             checkNewKey();
-            break;
-        case DT_PROGRAM_NUMBER:
             break;
 	case DT_URI_MESSAGE:                //uri_message
             generate_uri_confirm();
             break;
+        
+        /* not need to be handled */
+        case DT_CICAM_ID:
+        case DT_KP:
+        case DT_DHPM:
+        case DT_CICAM_DEVCERT:
+        case DT_SIGNATURE_B:
+        case DT_PROGRAM_NUMBER:
+            dbgprotocol("cCiPlusCredentials::handleGetData() => Id %d not need to be handled.\n", datatype_id);
+            break;
 	default:
-		break;
+            break;
     }
     return 0;
 }

@@ -523,7 +523,7 @@ int cCiPlusCredentials::handleReqData(unsigned int datatype_id) {
     return 0;
 }
 
-cCiPlusCredentials::cCiPlusCredentials(const char *CamName, int CamSlot, cCiPlusPrivate *ciplusPrivate, struct TsDecryptionKeyData * key_register)
+cCiPlusCredentials::cCiPlusCredentials(uint32_t resourceId, const char *CamName, int CamSlot, cCiPlusPrivate *ciplusPrivate, struct TsDecryptionKeyData * key_register)
 : ciplusPrivate(ciplusPrivate), key_register(key_register) {
     uint8_t buf[32], host_id[8];
     for(unsigned int i=0; i<MAX_CREDENTIAL_ELEMENTS; i++) {
@@ -554,7 +554,11 @@ cCiPlusCredentials::cCiPlusCredentials(const char *CamName, int CamSlot, cCiPlus
     memset(buf, 0, 1);
     setCredentialElement(DT_STATUS_FIELD, buf, 1);
     memset(buf, 0, 32);
-    buf[31] = 1;
+    if(resourceId == 0x008C1002)
+        buf[31] = 0x3; // use uri mask 0x3 if cc v2 is used
+    else
+        buf[31] = 0x1;
+    
     setCredentialElement(DT_URI_VERSIONS, buf, 32);
     akh_index = 0;
     if (!get_authdata(host_id, dhsk, buf, akh_index)) {

@@ -51,6 +51,13 @@ The plugin has the following optional parameter:
 
     -l [lib with private data]
 
+* To switch the supported CI+ Specification, you can use the following parameter.
+  Possible values are: 
+   12 = CI+ V1.2
+   13 = CI+ V1.3 (default)
+
+    -v [CI+ Specification]
+
 
 ## Thanks to ##
 

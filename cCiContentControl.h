@@ -6,18 +6,26 @@
 
 // Resource Identifiers:
 #define RI_CONTENT_CONTROL        0x008C1001
+#define RI_CONTENT_CONTROL_V2     0x008C1002
 
 // Content Control
-#define AOT_CC_OPEN_REQ             0x9F9001
-#define AOT_CC_OPEN_CNF             0x9F9002
-#define AOT_CC_DATA_REQ             0x9F9003
-#define AOT_CC_DATA_CNF             0x9F9004
-#define AOT_CC_SYNC_REQ             0x9F9005
-#define AOT_CC_SYNC_CNF             0x9F9006
-#define AOT_CC_SAC_DATA_REQ         0x9F9007
-#define AOT_CC_SAC_DATA_CNF         0x9F9008
-#define AOT_CC_SAC_SYNC_REQ         0x9F9009
-#define AOT_CC_SAC_SYNC_CNF         0x9F9010
+#define AOT_CC_OPEN_REQ               0x9F9001
+#define AOT_CC_OPEN_CNF               0x9F9002
+#define AOT_CC_DATA_REQ               0x9F9003
+#define AOT_CC_DATA_CNF               0x9F9004
+#define AOT_CC_SYNC_REQ               0x9F9005
+#define AOT_CC_SYNC_CNF               0x9F9006
+#define AOT_CC_SAC_DATA_REQ           0x9F9007
+#define AOT_CC_SAC_DATA_CNF           0x9F9008
+#define AOT_CC_SAC_SYNC_REQ           0x9F9009
+#define AOT_CC_SAC_SYNC_CNF           0x9F9010
+#define AOT_CC_PIN_CAPABILITIES_REQ   0x9F9011
+#define AOT_CC_PIN_CAPABILITIES_REPLY 0x9F9012
+#define AOT_CC_PIN_CMD                0x9F9013
+#define AOT_CC_PIN_REPLY              0x9F9014
+#define AOT_CC_PIN_EVENT              0x9F9015
+#define AOT_CC_PIN_PLAYBACK           0x9F9016
+#define AOT_CC_PIN_MMI_REQ            0x9F9017
 
 #define TSC_EVEN                    0x80
 #define TSC_ODD                     0xc0
@@ -39,7 +47,7 @@ private:
     bool cc_sac_send(int tag, uint8_t *data, unsigned int pos);
     
 public:
-  cCiContentControl(uint16_t SessionId, cCiTransportConnection *Tc, cCiPlusPrivate *ciplusPrivate);
+  cCiContentControl(uint16_t SessionId, uint32_t resourceId, cCiTransportConnection *Tc, cCiPlusPrivate *ciplusPrivate);
   virtual ~cCiContentControl();
   virtual void Process(int Length = 0, const uint8_t *Data = NULL);
   bool TsPostProcess(uint8_t *tsPacket);

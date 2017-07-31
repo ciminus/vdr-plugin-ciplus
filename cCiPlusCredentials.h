@@ -147,7 +147,7 @@ private:
     int handleReqData(unsigned int datatype_id);
     
 public:
-    cCiPlusCredentials(const char *CamName, int CamSlot, cCiPlusPrivate *ciplusPrivate, struct TsDecryptionKeyData * key_register);
+    cCiPlusCredentials(uint32_t resourceId, const char *CamName, int CamSlot, cCiPlusPrivate *ciplusPrivate, struct TsDecryptionKeyData * key_register);
     virtual ~cCiPlusCredentials();
     
     int GetDataLoop(const uint8_t *data, unsigned int datalen, unsigned int items);

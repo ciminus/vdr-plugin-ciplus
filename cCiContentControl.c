@@ -127,10 +127,10 @@ bool cCiContentControl::cc_sac_send(int tag, uint8_t* data, unsigned int pos) {
 }
 
 
-cCiContentControl::cCiContentControl(uint16_t SessionId, cCiTransportConnection* Tc, cCiPlusPrivate *ciplusPrivate)
-:cCiSession(SessionId, RI_CONTENT_CONTROL, Tc), credentials(CamSlot()->GetCamName(), CamSlot()->SlotNumber(), ciplusPrivate, key_register)
+cCiContentControl::cCiContentControl(uint16_t SessionId, uint32_t resourceId, cCiTransportConnection* Tc, cCiPlusPrivate *ciplusPrivate)
+:cCiSession(SessionId, resourceId, Tc), credentials(resourceId, CamSlot()->GetCamName(), CamSlot()->SlotNumber(), ciplusPrivate, key_register)
 {
-    dbgprotocol("Slot %d: new Content Control (session id %d)\n", CamSlot()->SlotNumber(), SessionId);
+    dbgprotocol("Slot %d: new Content Control 0x%08x (session id %d)\n", CamSlot()->SlotNumber(), resourceId, SessionId);
     memset(key_register[REG_EVEN].Cak, 0, 16);
     memset(key_register[REG_EVEN].Civ, 0, 16);
     memset(key_register[REG_ODD].Cak, 0, 16);
@@ -180,6 +180,18 @@ void cCiContentControl::Process(int Length, const uint8_t* Data) {
                 cc_sac_sync_cnf(length, data);
                 dbgprotocol("Slot %d: ==> Content Control SAC Sync Cnf (%d) ==> CI+ Module ready for decrypt!\n", CamSlot()->SlotNumber(), SessionId());
                 state = 3; 
+                break;
+            }
+            case AOT_CC_PIN_CAPABILITIES_REPLY: {
+                dbgprotocol("Slot %d: <== Content Control PIN capabilities reply (%d)\n", CamSlot()->SlotNumber(), SessionId());
+                break;
+            }
+            case AOT_CC_PIN_REPLY: {
+                dbgprotocol("Slot %d: <== Content Control PIN reply (%d)\n", CamSlot()->SlotNumber(), SessionId());
+                break;
+            }
+            case AOT_CC_PIN_EVENT: {
+                dbgprotocol("Slot %d: <== Content Control PIN reply (%d)\n", CamSlot()->SlotNumber(), SessionId());
                 break;
             }
             default: esyslog("ERROR: CAM %d: Content Control: unknown tag %06X", CamSlot()->SlotNumber(), Tag);

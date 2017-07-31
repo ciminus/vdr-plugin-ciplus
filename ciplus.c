@@ -20,7 +20,7 @@
 
 #define LIBCIPLUSPRIVATE PLUGINDIR "/libciplusprivate.so"
 
-static const char *VERSION        = "1.0.2";
+static const char *VERSION        = "1.0.3";
 static const char *DESCRIPTION    = "Use CI+ Modules with VDR";
 
 const char *confDir = NULL;
@@ -31,6 +31,7 @@ class cPluginCiplus : public cPlugin {
 private:
     cString privateDataLibName;
     cCiPlusPrivate *privateData;
+    int ciplus_version;
 public:
   cPluginCiplus(void);
   virtual ~cPluginCiplus();
@@ -46,6 +47,7 @@ cPluginCiplus::cPluginCiplus(void)
 {
     privateDataLibName = NULL;
     privateData = new cCiPlusPrivate;
+    ciplus_version = 13;
 }
 
 cPluginCiplus::~cPluginCiplus()
@@ -55,8 +57,12 @@ cPluginCiplus::~cPluginCiplus()
 
 const char *cPluginCiplus::CommandLineHelp(void)
 {
-    const char *help = "  -d                       Enable Debug-Output on stderr\n"
-                       "  -l <privateDataLibName>      File name (with path) of CI+ private data library\n";
+    const char *help = "  -d                           Enable Debug-Output on stderr\n"
+                       "  -l <privateDataLibName>      File name (with path) of CI+ private data library\n"
+                       "  -v <CI+ Version>             Enable a specific CI+ specification\n"
+                       "                               Possible Values:\n"
+                       "                                 12 = CI+ V1.2\n"
+                       "                                 13 = CI+ V1.3 (default)\n";
     return help;
 }
 
@@ -64,10 +70,11 @@ bool cPluginCiplus::ProcessArgs(int argc, char *argv[])
 {
     int c;
     opterr = 0;
-    while ((c = getopt (argc, argv, "dl:")) != -1) {
+    while ((c = getopt (argc, argv, "dl:v:")) != -1) {
         switch(c) {
             case 'd': DebugProtocol = true; break;
             case 'l': privateDataLibName = optarg; break;
+            case 'v': ciplus_version = atoi(optarg); break;
         }
     }
     return true;
@@ -82,7 +89,7 @@ bool cPluginCiplus::Initialize(void)
     }
         
     if(privateData->LoadPrivateData((const char *)privateDataLibName)) {
-        CiResourceHandlers.Register(new cCiPlusResourceHandler(privateData));
+        CiResourceHandlers.Register(new cCiPlusResourceHandler(privateData, ciplus_version));
     } else {
         esyslog("ciplus: Can't load CI+ private data. CI+ disabled!");
     }

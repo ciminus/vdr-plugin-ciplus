@@ -19,6 +19,7 @@ const uint32_t *cCiPlusResourceHandler::ResourceIds(void) const {
       RI_CONTENT_CONTROL,
       RI_HOST_LANGUAGE_COUNTRY,
       RI_CAM_UPGRADE,
+      RI_MULTISTREAM,
       0
       };
     static uint32_t IdsV13[] = {
@@ -29,6 +30,7 @@ const uint32_t *cCiPlusResourceHandler::ResourceIds(void) const {
       RI_HOST_LANGUAGE_COUNTRY,
       RI_CAM_UPGRADE,
       RI_OPERATOR_PROFILE,
+      RI_MULTISTREAM,
       0
       };
     if(ciplus_version == 12)
@@ -45,6 +47,7 @@ cCiSession *cCiPlusResourceHandler::GetNewCiSession(uint32_t ResourceId, uint16_
         case RI_HOST_LANGUAGE_COUNTRY:          return new cCiHostLanguageCountry(SessionId, Tc);
         case RI_CAM_UPGRADE:                    return new cCiCamFwUpgrade(SessionId, Tc);
         case RI_OPERATOR_PROFILE:               return new cCiOperatorProfile(SessionId, Tc);
+        case RI_MULTISTREAM:                    return new cCiMultistream(SessionId, Tc);
         default:                                return NULL;
     }
 }

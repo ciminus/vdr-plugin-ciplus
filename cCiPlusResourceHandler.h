@@ -9,6 +9,7 @@
 #include "cCiCamFwUpgrade.h"
 #include "cCiPlusHostControl.h"
 #include "cCiOperatorProfile.h"
+#include "cCiMultistream.h"
 
 class cCiPlusResourceHandler : public cCiResourceHandler {
 private:

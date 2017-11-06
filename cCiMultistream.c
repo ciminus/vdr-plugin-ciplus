@@ -16,7 +16,7 @@ void cCiMultistream::Process(int Length, const uint8_t* Data) {
         const uint8_t *data = GetData(Data, length);
         switch (Tag) {
             case AOT_CICAM_MULTISTREAM_CAPABILITY: {
-                dsyslog("CAM %d: CI+ Multistream: max TS = %u, max descramblers = %d", CamSlot()->SlotNumber(), data[0], UINT32(&data[1], 2));
+                dsyslog("CAM %d: CI+ Multistream: max TS = %u, max descramblers = %u", CamSlot()->SlotNumber(), data[0], UINT32(&data[1], 2));
                 dbgprotocol("Slot %d: <== CICAM_MULTISTREAM_CAPABILITY (%d)\n", CamSlot()->SlotNumber(), SessionId());
                 break;
             }

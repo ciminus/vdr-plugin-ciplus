@@ -3,7 +3,7 @@
 
 cCiMultistream::cCiMultistream(uint16_t SessionId, cCiTransportConnection *Tc) 
 :cCiSession(SessionId, RI_MULTISTREAM, Tc) {
-    dbgprotocol("Slot %d: new MULTISTREAM (session id %d)\n", CamSlot()->SlotNumber(), SessionId);
+    dsyslog("CAM %d: new MULTISTREAM (session id %d)\n", CamSlot()->SlotNumber(), SessionId);
 }
 
 cCiMultistream::~cCiMultistream() {
